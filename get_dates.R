@@ -46,6 +46,11 @@ system(paste("touch", filename))
 system(paste("rm -rf", filename))
 system(paste("touch", filename))
 
+commits <- paste0(current_year, ".commits.txt")
+system(paste("touch", commits))
+system(paste("rm -rf", commits))
+system(paste("touch", commits))
+
 
 for(dd in 1:ifelse(leap_year, 366, 365)){
     print(dd)
@@ -73,9 +78,7 @@ for(dd in 1:ifelse(leap_year, 366, 365)){
         length(grep(months_rep[dd], months_rep[1:dd])),
         "00:00:00",
         current_year,
-        "+0000",
-        "R",
-        filename
+        "+0000"
       )
     )
 }
@@ -113,3 +116,84 @@ for(dd in 1:ifelse(leap_year, 366, 365)){
       )
     )
 }
+
+for(dd in 1:ifelse(leap_year, 366, 365)){
+    print(dd)
+    aa <- dd %% 7
+    if(aa == 0) aa <- 7
+    print(aa)
+    print(days[aa])
+    print(months_rep[dd])
+    print(length(grep(months_rep[dd], months_rep[1:dd])))
+    print(
+      paste(
+        days[aa],
+        months_rep[dd],
+        length(grep(months_rep[dd], months_rep[1:dd])),
+        "00:00:00",
+        current_year,
+        "+0000"
+      )
+    )
+    if(days[aa] == "Sat" | days[aa] == "Sun"){
+      msg <- "I work less on weekends"
+      num_commits <- 2
+    }
+    if(days[aa] == "Tues" | days[aa] == "Wed"){
+      msg <- "I have weekly meetings"
+      num_commits <- 5
+    }
+    if(days[aa] == "Thu" | days[aa] == "Fri"){
+      msg <- "I work on weekdays"
+      num_commits <- 10
+    }
+    if(days[aa] == "Mon"){
+      msg <- "I hustle on Mondays"
+      num_commits <- 12
+    }
+
+    for(ff in 1:num_commits){
+      system(
+        paste0(
+          "echo ",
+          "git ",
+          "commit ",
+          "-m ",
+          "\\\"",
+          msg,
+          "\\\" ",
+          "--date ",
+          "\\\"",
+          days[aa], " ",
+          months_rep[dd], " ",
+          length(grep(months_rep[dd], months_rep[1:dd])), " ",
+          "00:00:00", " ",
+          current_year, " ",
+          "+0000\\\"", " ",
+          ">>", " ",
+          commits
+        )
+      )
+      system(paste("git add", commits))
+      print(
+        paste0(
+          "git ",
+          "commit ",
+          "-m ",
+          "\\\"",
+          msg,
+          "\\\" ",
+          "--date ",
+          "\\\"",
+          days[aa], " ",
+          months_rep[dd], " ",
+          length(grep(months_rep[dd], months_rep[1:dd])), " ",
+          "00:00:00", " ",
+          current_year, " ",
+          "+0000\\\"", " "
+        )
+      )
+      
+    }
+}
+
