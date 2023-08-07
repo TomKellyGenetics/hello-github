@@ -2,6 +2,8 @@
 
 if [[ -z $1 ]]; then
   year=$(date +%Y)
+else
+  year=$1
 fi
 
 Rscript get_dates.R $year
